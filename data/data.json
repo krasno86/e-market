@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "name": "Samsung Galaxy S26 Ultra",
+    "price": 1399,
+    "category": "Smartphones",
+    "weight": 0.23,
+    "image": "img/s26ultra.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Samsung Galaxy S26 Plus",
+    "price": 999,
+    "category": "Smartphones",
+    "weight": 0.17,
+    "image": "img/s26+.jfif"
+  },
+  {
+    "id": 3,
+    "name": "iPhone 17 Pro Max",
+    "price": 1599,
+    "category": "Smartphones",
+    "weight": 0.25,
+    "image": "img/17promax.jfif"
+  },
+  {
+    "id": 4,
+    "name": "iPhone 17",
+    "price": 1099,
+    "category": "Smartphones",
+    "weight": 0.19,
+    "image": "img/17.jfif"
+  },
+  {
+    "id": 5,
+    "name": "OnePlus 15",
+    "price": 899,
+    "category": "Smartphones",
+    "weight": 0.21,
+    "image": "img/1+15.jfif"
+  },
+  {
+    "id": 6,
+    "name": "Google Pixel 10 Pro",
+    "price": 950,
+    "category": "Smartphones",
+    "weight": 0.2,
+    "image": "img/pixel.jfif"
+  },
+  {
+    "id": 7,
+    "name": "OnePlus SuperVOOC 120W Charger",
+    "price": 69,
+    "category": "Accessories",
+    "weight": 0.15,
+    "image": ""
+  },
+  {
+    "id": 8,
+    "name": "Google 40W Compact Charger",
+    "price": 39,
+    "category": "Accessories",
+    "weight": 0.08,
+    "image": ""
+  },
+  {
+    "id": 9,
+    "name": "Apple MagSafe Silicone Case",
+    "price": 59,
+    "category": "Cases",
+    "weight": 0.04,
+    "image": ""
+  },
+  {
+    "id": 10,
+    "name": "OnePlus Karbon Bumper Case",
+    "price": 35,
+    "category": "Cases",
+    "weight": 0.03,
+    "image": ""
+  },
+  {
+    "id": 11,
+    "name": "Samsung Protective Standing Cover",
+    "price": 45,
+    "category": "Cases",
+    "weight": 0.05,
+    "image": ""
+  },
+  {
+    "id": 12,
+    "name": "Google Pixel 10 Case - Porcelain",
+    "price": 30,
+    "category": "Cases",
+    "weight": 0.04,
+    "image": ""
+  },
+  {
+    "id": 13,
+    "name": "iPhone 17 Tempered Glass Screen Protector",
+    "price": 25,
+    "category": "Protection",
+    "weight": 0.01,
+    "image": ""
+  },
+  {
+    "id": 14,
+    "name": "Galaxy S26 Ultra Hydrogel Film",
+    "price": 19,
+    "category": "Protection",
+    "weight": 0.01,
+    "image": ""
+  },
+  {
+    "id": 15,
+    "name": "Universal Anti-Scratch Screen Guard",
+    "price": 12,
+    "category": "Protection",
+    "weight": 0.01,
+    "image": ""
+  }
+]
