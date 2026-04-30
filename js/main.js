@@ -6,7 +6,6 @@ let productsCount = getProductsCount();
 let cart = getCart()
 let cartEl = document.querySelector('#cart-count');
 cartEl.innerText = productsCount;
-console.log(productsCount, cart);
 
 const renderProducts = (products) => {
   container.innerHTML = products
@@ -25,6 +24,11 @@ const renderProducts = (products) => {
     })
     .join('');
 };
+
+const updateCart = (products, cartProducts) => {
+  console.log(products);
+  console.log(cartProducts);
+}
 
 const init = async () => {
   try {
@@ -45,6 +49,8 @@ const init = async () => {
       }
 
       saveToStorage(cart, productsCount);
+      updateCart(products, cart);
+
     });
 
   } catch (error) {

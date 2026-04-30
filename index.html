@@ -6,11 +6,13 @@
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-<header class="store-header">
-  <div class="logo">Future Store</div>
-  <div id="cart-icon-container">
-    <span class="cart-icon">🛒</span>
-    <span id="cart-count"></span>
+<header class="main-header">
+  <div class="cart-wrapper">
+    <div class="cart-icon-box">
+      <span class="icon">🛒</span>
+      <span id="cart-count"></span>
+    </div>
+    <span class="cart-label">My Basket</span>
   </div>
 </header>
 <section id="shop-section">
@@ -20,7 +22,7 @@
 <section id="cart-preview" class="cart-preview">
   <h2>Your Basket</h2>
   <div id="cart-items-list">
-    <!-- Здесь JS будет рисовать строки: Название - Кол-во - Цена -->
+
   </div>
   <hr>
   <div class="cart-summary">
