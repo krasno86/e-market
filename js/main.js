@@ -26,14 +26,39 @@ const renderProducts = (products) => {
 };
 
 const updateCart = (products, cartProducts) => {
-  console.log(products);
-  console.log(cartProducts);
+  let subtotal = 0;
+  let totalWeight = 0;
+  const productsMap = products.reduce((acc, item) => {
+    acc[item.id] = item;
+    return acc;
+  }, {});
+
+  cartProducts.forEach((cartItem) => {
+    const product = productsMap[cartItem.id];
+    if (product) {
+      subtotal += product.price * cartItem.count;
+      totalWeight += product.weight * cartItem.count;
+    }
+  });
+
+  const tax = subtotal * 0.19;
+  let shipping = 0;
+  if (totalWeight > 0 && totalWeight < 1) shipping = 5;
+  else if (totalWeight >= 1) shipping = 15;
+  const grandTotal = subtotal + tax + shipping;
+  document.querySelector('#total-weight').textContent = totalWeight.toFixed(2);
+  document.querySelector('#shipping-cost').textContent = shipping;
+  document.querySelector('#sub-total').textContent = subtotal.toFixed(2);
+  document.querySelector('#tax-amount').textContent = tax.toFixed(2);
+  document.querySelector('#grand-total').innerText = grandTotal.toFixed(2);
+
 }
 
 const init = async () => {
   try {
     const products = await fetchProducts();
     renderProducts(products);
+    updateCart(products, cart);
 
     container.addEventListener('click', (event) => {
       if (event.target.classList.contains('buy-btn')) {
