@@ -1,6 +1,12 @@
 import { fetchProducts } from './api.js';
+import { getCart, getProductsCount, saveToStorage } from './storage.js';
 
 const container = document.querySelector('#catalog');
+let productsCount = getProductsCount();
+let cart = getCart()
+let cartEl = document.querySelector('#cart-count');
+cartEl.innerText = productsCount;
+console.log(productsCount, cart);
 
 const renderProducts = (products) => {
   container.innerHTML = products
@@ -24,6 +30,22 @@ const init = async () => {
   try {
     const products = await fetchProducts();
     renderProducts(products);
+
+    container.addEventListener('click', (event) => {
+      if (event.target.classList.contains('buy-btn')) {
+        const id = event.target.dataset.id;
+        productsCount ++;
+        if (cart.length === 0) cart.push({ id: id, count: 1 });
+        else if (cart.length > 0) {
+          let existingProduct = cart.find((item) => item.id === id);
+          if (existingProduct) existingProduct.count++;
+          else cart.push({ id: id, count: 1 });
+        }
+        cartEl.innerText = productsCount;
+      }
+
+      saveToStorage(cart, productsCount);
+    });
 
   } catch (error) {
     container.innerHTML = `<p style="color:red">Error loading products. Please try again later.</p>`;

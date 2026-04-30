@@ -1,4 +1,3 @@
-/* Общие стили */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f9;
@@ -13,7 +12,6 @@ h1 {
     margin-bottom: 40px;
 }
 
-/* Сетка каталога */
 #catalog {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -22,7 +20,6 @@ h1 {
     margin: 0 auto;
 }
 
-/* Карточка товара */
 .product-card {
     background: #fff;
     border-radius: 12px;
@@ -50,7 +47,7 @@ h1 {
 .product-card h3 {
     font-size: 1.2rem;
     margin: 10px 0;
-    min-height: 3em; /* Чтобы заголовки разной длины не двигали кнопки */
+    min-height: 3em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -70,7 +67,6 @@ h1 {
     letter-spacing: 1px;
 }
 
-/* Кнопка покупки */
 .buy-btn {
     background-color: #27ae60;
     color: white;
@@ -85,4 +81,22 @@ h1 {
 
 .buy-btn:hover {
     background-color: #219150;
+}
+
+#cart-icon-container {
+    position: relative;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
 }
