@@ -125,3 +125,69 @@ h1 {
     min-width: 14px;
     text-align: center;
 }
+
+#cart-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 40px; /* Название | +/- | Итого | Удалить */
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.cart-item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-item-name {
+    font-weight: bold;
+}
+
+.cart-item-price {
+    font-size: 0.85em;
+    color: #777;
+}
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.cart-item-controls button {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.cart-item-subtotal {
+    font-weight: bold;
+    text-align: right;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #ff4757;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-remove:hover {
+    color: #ff0000;
+    transform: scale(1.2);
+}

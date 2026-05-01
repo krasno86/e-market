@@ -29,7 +29,6 @@ const renderProducts = (products) => {
 const init = async () => {
   try {
     const products = await fetchProducts();
-    console.log(products);
     const productsMap = products.reduce((acc, item) => {
       acc[item.id] = item;
       return acc;
