@@ -1,7 +1,13 @@
 import { calculateCartTotals } from './calculations.js';
-import {saveToStorage} from "./storage.js";
 
 export const updateCartUI = (cart, productsMap) => {
+  const cartList = document.querySelector('#cart-items-list');
+
+  if (cart.length === 0) {
+    cartList.innerHTML = '<p class="empty-msg">Your cart is empty. Start shopping!</p>';
+    return;
+  }
+
   const totals = calculateCartTotals(cart, productsMap);
   document.querySelector('#cart-count').innerText = cart.reduce((sum, item) => sum + item.count, 0,);
   document.querySelector('#total-weight').textContent = totals.totalWeight.toFixed(2);
