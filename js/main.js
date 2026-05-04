@@ -28,14 +28,53 @@ const renderProducts = (products) => {
 
 const init = async () => {
   try {
-    const products = await fetchProducts();
-    const productsMap = products.reduce((acc, item) => {
-      acc[item.id] = item;
-      return acc;
-    }, {});
-    renderProducts(products);
-    updateCartUI(cart, productsMap);
+    const user = localStorage.getItem('user')
+    const shopSection = document.getElementById('#shop-section');
+    const regSection = document.getElementById('#registration-section');
 
+    // const products = await fetchProducts();
+    // const productsMap = products.reduce((acc, item) => {
+    //   acc[item.id] = item;
+    //   return acc;
+    // }, {});
+    // renderProducts(products);
+    // updateCartUI(cart, productsMap);
+
+
+    if (user) {
+      shopSection.style.display = '';
+      regSection.style.display = 'none'
+      const products = await fetchProducts();
+      const productsMap = products.reduce((acc, item) => {
+        acc[item.id] = item;
+        return acc;
+      }, {});
+      renderProducts(products);
+      updateCartUI(cart, productsMap);
+    } else {
+      const form = document.querySelector('#auth-form');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        console.log(formData);
+        const email = formData.get('email');
+        const pass = formData.get('pass');
+        const confirmPass = formData.get('confirmPassword');
+
+        if (pass !== confirmPass) {
+          alert("Password don't match!");
+          return;
+        }
+
+        const data = {
+          email: email,
+          password: pass
+        };
+
+        console.log("Данные готовы к отправке:", data);
+      })
+    }
+    
     container.addEventListener('click', (event) => {
       if (event.target.classList.contains('buy-btn')) {
         const id = event.target.dataset.id;
@@ -65,7 +104,6 @@ const init = async () => {
         }
         productsCount --;
       } else if (event.target.classList.contains('btn-plus')) {
-
         cart = cart.map((el) => el.id === id ? { ...el, count: el.count + 1} : el);
         productsCount ++;
       } else if (event.target.classList.contains('btn-remove')) {
