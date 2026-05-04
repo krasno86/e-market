@@ -1,7 +1,8 @@
 import { calculateCartTotals } from './calculations.js';
+import {saveToStorage} from "./storage.js";
 
-export const updateCartUI = (cart, productsMap) => {const totals = calculateCartTotals(cart, productsMap);
-
+export const updateCartUI = (cart, productsMap) => {
+  const totals = calculateCartTotals(cart, productsMap);
   document.querySelector('#cart-count').innerText = cart.reduce((sum, item) => sum + item.count, 0,);
   document.querySelector('#total-weight').textContent = totals.totalWeight.toFixed(2);
   document.querySelector('#sub-total').textContent = totals.subtotal.toFixed(2);

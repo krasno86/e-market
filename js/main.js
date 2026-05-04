@@ -53,6 +53,30 @@ const init = async () => {
       updateCartUI(cart, productsMap);
     });
 
+    document.querySelector('#cart-items-list').addEventListener("click", (event) => {
+      const id = event.target.dataset.id;
+      let cartItem = cart.find((item) => item.id === id);
+
+      if (event.target.classList.contains('btn-minus')) {
+        if (cartItem.count === 1) {
+          cart = cart.filter((el) => el.id !== id);
+        } else if (cartItem.count > 1) {
+          cart = cart.map((el) => el.id === id ? { ...el, count: el.count - 1} : el);
+        }
+        productsCount --;
+      } else if (event.target.classList.contains('btn-plus')) {
+
+        cart = cart.map((el) => el.id === id ? { ...el, count: el.count + 1} : el);
+        productsCount ++;
+      } else if (event.target.classList.contains('btn-remove')) {
+        cart = cart.filter((el) => el.id !== id);
+        productsCount = productsCount - cartItem.count
+      }
+
+      saveToStorage(cart, productsCount);
+      updateCartUI(cart, productsMap);
+    })
+
   } catch (error) {
     container.innerHTML = `<p style="color:red">Error loading products. Please try again later.</p>`;
     console.error('Initialization error:', error);
