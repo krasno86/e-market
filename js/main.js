@@ -4,8 +4,7 @@ import { updateCartUI } from './updateCartUI.js';
 
 const container = document.querySelector('#catalog');
 let productsCount = getProductsCount();
-let cart = getCart()
-const user = getUser();
+let cart = getCart();
 let cartEl = document.querySelector('#cart-count');
 cartEl.innerText = productsCount;
 
@@ -29,38 +28,49 @@ const renderProducts = (products) => {
 
 const init = async () => {
   try {
-    const user = localStorage.getItem('user')
-    const shopSection = document.getElementById('#shop-section');
-    const regSection = document.getElementById('#registration-section');
+    let productsMap = {};
+    const shopSection = document.querySelector('#shop-section');
+    const regSection = document.querySelector('#registration-section');
 
-    if (user) {
-      shopSection.style.display = '';
-      regSection.style.display = 'none'
-      const products = await fetchProducts();
-      const productsMap = products.reduce((acc, item) => {
-        acc[item.id] = item;
-        return acc;
-      }, {});
-      renderProducts(products);
-      updateCartUI(cart, productsMap);
-    } else {
-      const form = document.querySelector('#auth-form');
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const email = formData.get('email');
-        const pass = formData.get('pass');
-        const confirmPass = formData.get('confirmPassword');
+    const renderPage = async () => {
+      const user = localStorage.getItem('user')
+      if (user) {
+        shopSection.style.display = 'block';
+        regSection.style.display = 'none';
+        console.log('user!!!!!!!!!!!!', user)
+        const products = await fetchProducts();
+        productsMap = products.reduce((acc, item) => {
+          acc[item.id] = item;
+          return acc;
+        }, {});
+        renderProducts(products);
+        updateCartUI(cart, productsMap);
+      } else {
+        shopSection.style.display = 'none';
+        regSection.style.display = 'block';
+        const form = document.querySelector('#auth-form');
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          console.log('submit!!!!');
+          const formData = new FormData(form);
+          const email = formData.get('email');
+          const pass = formData.get('pass');
+          const confirmPass = formData.get('confirmPassword');
 
-        if (pass !== confirmPass) {
-          alert("Password don't match!");
-          return;
-        }
+          if (pass !== confirmPass) {
+            alert("Password don't match!");
+            return;
+          }
 
-        const userData = { email: email, password: pass };
-        saveUserToStorage(userData);
-      })
+          const userData = { email: email, password: pass };
+          console.log('userdata!!!!!!1111111111', userData);
+          saveUserToStorage(userData);
+          await renderPage();
+        })
+      }
     }
+
+    await renderPage();
 
     container.addEventListener('click', (event) => {
       if (event.target.classList.contains('buy-btn')) {
