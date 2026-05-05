@@ -1,10 +1,11 @@
 import { fetchProducts } from './api.js';
-import { getCart, getProductsCount, saveToStorage } from './storage.js';
+import {getCart, getProductsCount, getUser, saveToStorage, saveUserToStorage} from './storage.js';
 import { updateCartUI } from './updateCartUI.js';
 
 const container = document.querySelector('#catalog');
 let productsCount = getProductsCount();
 let cart = getCart()
+const user = getUser();
 let cartEl = document.querySelector('#cart-count');
 cartEl.innerText = productsCount;
 
@@ -32,15 +33,6 @@ const init = async () => {
     const shopSection = document.getElementById('#shop-section');
     const regSection = document.getElementById('#registration-section');
 
-    // const products = await fetchProducts();
-    // const productsMap = products.reduce((acc, item) => {
-    //   acc[item.id] = item;
-    //   return acc;
-    // }, {});
-    // renderProducts(products);
-    // updateCartUI(cart, productsMap);
-
-
     if (user) {
       shopSection.style.display = '';
       regSection.style.display = 'none'
@@ -56,7 +48,6 @@ const init = async () => {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-        console.log(formData);
         const email = formData.get('email');
         const pass = formData.get('pass');
         const confirmPass = formData.get('confirmPassword');
@@ -66,15 +57,11 @@ const init = async () => {
           return;
         }
 
-        const data = {
-          email: email,
-          password: pass
-        };
-
-        console.log("Данные готовы к отправке:", data);
+        const userData = { email: email, password: pass };
+        saveUserToStorage(userData);
       })
     }
-    
+
     container.addEventListener('click', (event) => {
       if (event.target.classList.contains('buy-btn')) {
         const id = event.target.dataset.id;
