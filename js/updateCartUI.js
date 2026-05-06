@@ -4,7 +4,7 @@ export const updateCartUI = (cart, productsMap) => {
   const cartList = document.querySelector('#cart-items-list');
 
   if (cart.length === 0) {
-    cartList.innerHTML = '<p class="empty-msg">Your cart is empty. Start shopping!</p>';
+    cartList.innerHTML = '<p class="empty-msg" style="margin: auto">Your cart is empty. Start shopping!</p>';
     return;
   }
 
@@ -24,7 +24,7 @@ export const updateCartUI = (cart, productsMap) => {
   <div class="cart-item" data-id="${product.id}">
     <div class="cart-item-info">
       <span class="cart-item-name">${product.name}</span>
-      <span class="cart-item-price">${product.price} € / шт.</span>
+      <span class="cart-item-price">${product.price} € / it.</span>
     </div>
     
     <div class="cart-item-controls">

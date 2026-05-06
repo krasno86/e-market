@@ -18,6 +18,6 @@ export const calculateCartTotals = (cart, productsMap) => {
     totalWeight,
     tax,
     shipping,
-    grandTotal: subtotal + tax + shipping,
+    grandTotal: subtotal + tax + shipping
   };
 };

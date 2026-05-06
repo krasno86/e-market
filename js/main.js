@@ -5,7 +5,7 @@ import { initRegistration } from './auth.js';
 import { handleCartClick } from './cartActions.js';
 import { addToCart } from './productActions.js';
 import { toggleSections, updateCartCounter } from './uiManager.js';
-import { processCheckout } from './checkout.js'; // ДОБАВИЛИ ИМПОРТ
+import { processCheckout } from './checkout.js';
 
 let productsCount = getProductsCount();
 let cart = getCart();
@@ -14,13 +14,13 @@ const container = document.querySelector('#catalog');
 
 const renderProducts = (products) => {
   container.innerHTML = products.map((pr) => `
-        <article class="product-card">
-            ${pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : ''}
-            <div class="category">${pr.category}</div>
-            <h3>${pr.name}</h3>
-            <div class="price">${pr.price} €</div>
-            <button class="buy-btn" data-id="${pr.id}">Add to Cart</button>
-        </article>
+    <article class="product-card">
+      ${pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : ''}
+      <div class="category">${pr.category}</div>
+      <h3>${pr.name}</h3>
+      <div class="price">${pr.price} €</div>
+      <button class="buy-btn" data-id="${pr.id}">Add to Cart</button>
+    </article>
     `).join('');
 };
 
@@ -32,8 +32,6 @@ const init = async () => {
   };
 
   try {
-    updateCartCounter(productsCount);
-
     const renderPage = async () => {
       const user = localStorage.getItem('user');
       toggleSections(!!user);
@@ -41,9 +39,11 @@ const init = async () => {
       if (user) {
         const products = await fetchProducts();
         productsMap = products.reduce((acc, item) => (acc[item.id] = item, acc), {});
+
         renderProducts(products);
-        updateCartUI(cart, productsMap);
+        saveAndRefresh();
       } else {
+        updateCartCounter(productsCount);
         initRegistration(renderPage);
       }
     };
@@ -78,7 +78,7 @@ const init = async () => {
     });
 
   } catch (error) {
-    container.innerHTML = `<p style="color:red">Error loading products. Please check your connection.</p>`;
+    container.innerHTML = `<p style="color:red; text-align:center;">Error loading products. Check console for details.</p>`;
     console.error('Initialization error:', error);
   }
 };
