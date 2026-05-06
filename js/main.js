@@ -37,7 +37,6 @@ const init = async () => {
       if (user) {
         shopSection.style.display = 'block';
         regSection.style.display = 'none';
-        console.log('user!!!!!!!!!!!!', user)
         const products = await fetchProducts();
         productsMap = products.reduce((acc, item) => {
           acc[item.id] = item;
@@ -51,19 +50,23 @@ const init = async () => {
         const form = document.querySelector('#auth-form');
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
-          console.log('submit!!!!');
           const formData = new FormData(form);
           const email = formData.get('email');
           const pass = formData.get('pass');
           const confirmPass = formData.get('confirmPassword');
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+          if (!emailRegex.test(email)) {
+            document.getElementById('email-error').textContent = 'Please enter a valid email address';
+            return;
+          }
 
           if (pass !== confirmPass) {
-            alert("Password don't match!");
+            document.getElementById('pass-error').textContent = 'Password don\'t match!';
             return;
           }
 
           const userData = { email: email, password: pass };
-          console.log('userdata!!!!!!1111111111', userData);
           saveUserToStorage(userData);
           await renderPage();
         })
@@ -111,6 +114,23 @@ const init = async () => {
       saveToStorage(cart, productsCount);
       updateCartUI(cart, productsMap);
     })
+
+    document.querySelector('#checkout-btn').addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userEmail = user ? user.email : 'Customer';
+      alert(`Thank you for your purchase, ${userEmail}! Total items: ${productsCount}`);
+      cart = [];
+      productsCount = 0;
+      saveToStorage(cart, productsCount);
+      cartEl.innerText = productsCount;
+      updateCartUI(cart, productsMap);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
   } catch (error) {
     container.innerHTML = `<p style="color:red">Error loading products. Please try again later.</p>`;
