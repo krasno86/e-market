@@ -2,6 +2,8 @@ import { fetchProducts } from './api.js';
 import { getCart, getProductsCount, saveToStorage } from './storage.js';
 import { updateCartUI } from './updateCartUI.js';
 import { initRegistration } from './auth.js';
+import { handleCartClick } from './cartActions.js';
+import { addToCart } from './productActions.js';
 
 const container = document.querySelector('#catalog');
 let productsCount = getProductsCount();
@@ -11,10 +13,9 @@ cartEl.innerText = productsCount;
 
 const renderProducts = (products) => {
   container.innerHTML = products
-    .map((pr) => {
-      const imageHtml= pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : '';
-
-      return `
+      .map((pr) => {
+        const imageHtml= pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : '';
+        return `
         <article class="product-card">
             ${imageHtml}
             <div class="category">${pr.category}</div>
@@ -23,8 +24,8 @@ const renderProducts = (products) => {
             <button class="buy-btn" data-id="${pr.id}">Add to Cart</button>
         </article>
       `;
-    })
-    .join('');
+      })
+      .join('');
 };
 
 const init = async () => {
@@ -34,72 +35,59 @@ const init = async () => {
     const regSection = document.querySelector('#registration-section');
 
     const renderPage = async () => {
-      const user = localStorage.getItem('user')
+      const user = localStorage.getItem('user');
+
       if (user) {
         shopSection.style.display = 'block';
         regSection.style.display = 'none';
+
         const products = await fetchProducts();
         productsMap = products.reduce((acc, item) => {
           acc[item.id] = item;
           return acc;
         }, {});
+
         renderProducts(products);
         updateCartUI(cart, productsMap);
       } else {
         shopSection.style.display = 'none';
-        regSection.style.display = 'block';
+        regSection.style.display = 'flex';
         initRegistration(renderPage);
       }
-    }
+    };
 
     await renderPage();
+
+    document.querySelector('#logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('user');
+      location.reload();
+    });
 
     container.addEventListener('click', (event) => {
       if (event.target.classList.contains('buy-btn')) {
         const id = event.target.dataset.id;
-        productsCount ++;
-        if (cart.length === 0) cart.push({ id: id, count: 1 });
-        else if (cart.length > 0) {
-          let existingProduct = cart.find((item) => item.id === id);
-          if (existingProduct) existingProduct.count++;
-          else cart.push({ id: id, count: 1 });
-        }
+        cart = addToCart(cart, id);
+        productsCount++;
         cartEl.innerText = productsCount;
+        saveToStorage(cart, productsCount);
+        updateCartUI(cart, productsMap);
       }
-
-      saveToStorage(cart, productsCount);
-      updateCartUI(cart, productsMap);
     });
 
     document.querySelector('#cart-items-list').addEventListener("click", (event) => {
-      const id = event.target.dataset.id;
-      let cartItem = cart.find((item) => item.id === id);
-
-      if (event.target.classList.contains('btn-minus')) {
-        if (cartItem.count === 1) {
-          cart = cart.filter((el) => el.id !== id);
-        } else if (cartItem.count > 1) {
-          cart = cart.map((el) => el.id === id ? { ...el, count: el.count - 1} : el);
-        }
-        productsCount --;
-      } else if (event.target.classList.contains('btn-plus')) {
-        cart = cart.map((el) => el.id === id ? { ...el, count: el.count + 1} : el);
-        productsCount ++;
-      } else if (event.target.classList.contains('btn-remove')) {
-        cart = cart.filter((el) => el.id !== id);
-        productsCount = productsCount - cartItem.count
-      }
-
+      const result = handleCartClick(event, cart, productsCount);
+      cart = result.cart;
+      productsCount = result.productsCount;
       saveToStorage(cart, productsCount);
       updateCartUI(cart, productsMap);
-    })
+      cartEl.innerText = productsCount;
+    });
 
     document.querySelector('#checkout-btn').addEventListener('click', () => {
       if (cart.length === 0) {
         alert("Your cart is empty!");
         return;
       }
-
       const user = JSON.parse(localStorage.getItem('user'));
       const userEmail = user ? user.email : 'Customer';
       alert(`Thank you for your purchase, ${userEmail}! Total items: ${productsCount}`);
@@ -112,8 +100,8 @@ const init = async () => {
     });
 
   } catch (error) {
-    container.innerHTML = `<p style="color:red">Error loading products. Please try again later.</p>`;
-    console.error('Initialization error:', error);
+    container.innerHTML = `<p style="color:red">Error loading products.</p>`;
+    console.error('Error:', error);
   }
 };
 
