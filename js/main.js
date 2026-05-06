@@ -1,6 +1,7 @@
 import { fetchProducts } from './api.js';
-import {getCart, getProductsCount, getUser, saveToStorage, saveUserToStorage} from './storage.js';
+import { getCart, getProductsCount, saveToStorage } from './storage.js';
 import { updateCartUI } from './updateCartUI.js';
+import { initRegistration } from './auth.js';
 
 const container = document.querySelector('#catalog');
 let productsCount = getProductsCount();
@@ -47,29 +48,7 @@ const init = async () => {
       } else {
         shopSection.style.display = 'none';
         regSection.style.display = 'block';
-        const form = document.querySelector('#auth-form');
-        form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const formData = new FormData(form);
-          const email = formData.get('email');
-          const pass = formData.get('pass');
-          const confirmPass = formData.get('confirmPassword');
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-          if (!emailRegex.test(email)) {
-            document.getElementById('email-error').textContent = 'Please enter a valid email address';
-            return;
-          }
-
-          if (pass !== confirmPass) {
-            document.getElementById('pass-error').textContent = 'Password don\'t match!';
-            return;
-          }
-
-          const userData = { email: email, password: pass };
-          saveUserToStorage(userData);
-          await renderPage();
-        })
+        initRegistration(renderPage);
       }
     }
 
