@@ -4,54 +4,46 @@ import { updateCartUI } from './updateCartUI.js';
 import { initRegistration } from './auth.js';
 import { handleCartClick } from './cartActions.js';
 import { addToCart } from './productActions.js';
+import { toggleSections, updateCartCounter } from './uiManager.js';
+import { processCheckout } from './checkout.js'; // ДОБАВИЛИ ИМПОРТ
 
-const container = document.querySelector('#catalog');
 let productsCount = getProductsCount();
 let cart = getCart();
-let cartEl = document.querySelector('#cart-count');
-cartEl.innerText = productsCount;
+let productsMap = {};
+const container = document.querySelector('#catalog');
 
 const renderProducts = (products) => {
-  container.innerHTML = products
-      .map((pr) => {
-        const imageHtml= pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : '';
-        return `
+  container.innerHTML = products.map((pr) => `
         <article class="product-card">
-            ${imageHtml}
+            ${pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : ''}
             <div class="category">${pr.category}</div>
             <h3>${pr.name}</h3>
             <div class="price">${pr.price} €</div>
             <button class="buy-btn" data-id="${pr.id}">Add to Cart</button>
         </article>
-      `;
-      })
-      .join('');
+    `).join('');
 };
 
 const init = async () => {
+  const saveAndRefresh = () => {
+    saveToStorage(cart, productsCount);
+    updateCartUI(cart, productsMap);
+    updateCartCounter(productsCount);
+  };
+
   try {
-    let productsMap = {};
-    const shopSection = document.querySelector('#shop-section');
-    const regSection = document.querySelector('#registration-section');
+    updateCartCounter(productsCount);
 
     const renderPage = async () => {
       const user = localStorage.getItem('user');
+      toggleSections(!!user);
 
       if (user) {
-        shopSection.style.display = 'block';
-        regSection.style.display = 'none';
-
         const products = await fetchProducts();
-        productsMap = products.reduce((acc, item) => {
-          acc[item.id] = item;
-          return acc;
-        }, {});
-
+        productsMap = products.reduce((acc, item) => (acc[item.id] = item, acc), {});
         renderProducts(products);
         updateCartUI(cart, productsMap);
       } else {
-        shopSection.style.display = 'none';
-        regSection.style.display = 'flex';
         initRegistration(renderPage);
       }
     };
@@ -63,45 +55,31 @@ const init = async () => {
       location.reload();
     });
 
-    container.addEventListener('click', (event) => {
-      if (event.target.classList.contains('buy-btn')) {
-        const id = event.target.dataset.id;
-        cart = addToCart(cart, id);
+    document.querySelector('#catalog').addEventListener('click', (e) => {
+      if (e.target.classList.contains('buy-btn')) {
+        cart = addToCart(cart, e.target.dataset.id);
         productsCount++;
-        cartEl.innerText = productsCount;
-        saveToStorage(cart, productsCount);
-        updateCartUI(cart, productsMap);
+        saveAndRefresh();
       }
     });
 
-    document.querySelector('#cart-items-list').addEventListener("click", (event) => {
-      const result = handleCartClick(event, cart, productsCount);
+    document.querySelector('#cart-items-list').addEventListener("click", (e) => {
+      const result = handleCartClick(e, cart, productsCount);
       cart = result.cart;
       productsCount = result.productsCount;
-      saveToStorage(cart, productsCount);
-      updateCartUI(cart, productsMap);
-      cartEl.innerText = productsCount;
+      saveAndRefresh();
     });
 
     document.querySelector('#checkout-btn').addEventListener('click', () => {
-      if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-      }
-      const user = JSON.parse(localStorage.getItem('user'));
-      const userEmail = user ? user.email : 'Customer';
-      alert(`Thank you for your purchase, ${userEmail}! Total items: ${productsCount}`);
-      cart = [];
-      productsCount = 0;
-      saveToStorage(cart, productsCount);
-      cartEl.innerText = productsCount;
-      updateCartUI(cart, productsMap);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const result = processCheckout(cart, productsCount, productsMap);
+      cart = result.cart;
+      productsCount = result.productsCount;
+      saveAndRefresh();
     });
 
   } catch (error) {
-    container.innerHTML = `<p style="color:red">Error loading products.</p>`;
-    console.error('Error:', error);
+    container.innerHTML = `<p style="color:red">Error loading products. Please check your connection.</p>`;
+    console.error('Initialization error:', error);
   }
 };
 
