@@ -12,9 +12,10 @@ let cart = getCart();
 let productsMap = {};
 let products = [];
 const container = document.querySelector('#catalog');
-const searchInput = document.querySelector('#product-search');
 
 const init = async () => {
+  const searchInput = document.querySelector('#product-search');
+
   const saveAndRefresh = () => {
     saveToStorage(cart, productsCount);
     updateCartUI(cart, productsMap);
@@ -23,15 +24,15 @@ const init = async () => {
 
   try {
     const renderPage = async () => {
-      const user = getUser();
-      toggleSections(!!user);
+      const isLogged = getUser();
+      toggleSections(!!isLogged);
 
-      if (user) {
+      if (isLogged) {
         products = await fetchProducts();
         productsMap = products.reduce((acc, item) => (acc[item.id] = item, acc), {});
-
         renderProducts(products, container);
         saveAndRefresh();
+        document.querySelector('#shop-section').classList.add('loaded');
       } else {
         updateCartCounter(productsCount);
         initRegistration(renderPage);
@@ -70,10 +71,13 @@ const init = async () => {
 
     if (searchInput) {
       searchInput.addEventListener('input', function(event) {
-        console.log(event.target.value, productsMap);
         const searchStr = event.target.value.toLowerCase().trim();
         const findProducts = products.filter((el) => el.name.toLowerCase().includes(searchStr) || el.category.toLowerCase().includes(searchStr) );
-        renderProducts(findProducts, container);
+        if (findProducts.length === 0) {
+          container.innerHTML = `<p class="no-results">Nothing found for "${event.target.value}"</p>`;
+        } else {
+          renderProducts(findProducts, container);
+        }
       });
     }
 

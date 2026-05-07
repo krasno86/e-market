@@ -32,8 +32,6 @@ export const initRegistration = (onSuccess) => {
 
         const userData = { email, password: pass };
         saveUserToStorage(userData);
-
-        // Сообщаем main.js, что всё готово
         if (onSuccess) await onSuccess();
     });
 };

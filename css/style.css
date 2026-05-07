@@ -311,10 +311,6 @@ h1 {
     display: none !important;
 }
 
-#shop-section {
-    display: none;
-}
-
 .shop-controls {
     max-width: 1200px;
     margin: 0 auto 30px auto;
@@ -360,4 +356,34 @@ h1 {
     background-color: cornflowerblue !important;
     transform: scale(1.05);
     transition: all 0.2s ease;
+}
+
+/* 1. Базовое скрытие (оставляем как есть) */
+#registration-section,
+#shop-section {
+    display: none !important;
+}
+
+#registration-section.show-reg {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#shop-section.show-shop {
+    display: block !important;
+}
+
+#shop-section:not(.loaded) #catalog,
+#shop-section:not(.loaded) #cart-preview {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#shop-section.loaded #catalog,
+#shop-section.loaded #cart-preview {
+    opacity: 1;
+    transition: opacity 0.4s ease-in;
+    pointer-events: auto;
 }

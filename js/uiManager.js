@@ -3,11 +3,11 @@ export const toggleSections = (isUserLoggedIn) => {
     const regSection = document.querySelector('#registration-section');
 
     if (isUserLoggedIn) {
-        shopSection.style.display = 'block';
-        regSection.style.display = 'none';
+        shopSection.classList.add('show-shop');
+        regSection.classList.remove('show-reg');
     } else {
-        shopSection.style.display = 'none';
-        regSection.style.display = 'flex';
+        regSection.classList.add('show-reg');
+        shopSection.classList.remove('show-shop');
     }
 };
 
