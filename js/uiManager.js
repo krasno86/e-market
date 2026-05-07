@@ -19,7 +19,7 @@ export const updateCartCounter = (count) => {
 export const renderProducts = (products, container) => {
     container.innerHTML = products.map((pr) => `
     <article class="product-card">
-      ${pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : ''}
+      ${pr.image ? `<img src="${pr.image}" alt="${pr.name}" loading="lazy" onerror="this.style.display='none'">` : ''}
       <div class="category">${pr.category}</div>
       <h3>${pr.name}</h3>
       <div class="price">${pr.price} €</div>
