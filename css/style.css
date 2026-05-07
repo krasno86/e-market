@@ -147,13 +147,70 @@ h1 {
 #cart-items-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 15px;
+    gap: 15px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .cart-item {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 40px; /* Название | +/- | Итого | Удалить */
+    grid-template-columns: 3fr 1fr 1fr 50px;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.cart-item-name {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.cart-item-price {
+    font-size: 0.95em;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+.cart-item-controls {
+    gap: 12px;
+}
+
+.cart-item-controls button {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 1px solid #27ae60;
+    color: #27ae60;
+    background: white;
+    transition: all 0.2s;
+}
+
+.cart-item-controls button:hover {
+    background: #27ae60;
+    color: white;
+}
+
+.cart-item-subtotal {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #e67e22;
+}
+
+.btn-remove {
+    font-size: 24px;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 40px;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
