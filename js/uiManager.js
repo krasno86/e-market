@@ -27,3 +27,17 @@ export const renderProducts = (products, container) => {
     </article>
     `).join('');
 };
+
+export const animateBuyButton = (btn) => {
+    const originalText = btn.innerText;
+
+    btn.classList.add('added');
+    btn.innerText = '✅ Added!';
+    btn.disabled = true;
+
+    setTimeout(() => {
+        btn.classList.remove('added');
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }, 2000);
+};

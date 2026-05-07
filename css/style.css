@@ -355,3 +355,9 @@ h1 {
     border-color: #27ae60;
     box-shadow: 0 0 8px rgba(39, 174, 96, 0.2);
 }
+
+.buy-btn.added {
+    background-color: cornflowerblue !important;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}

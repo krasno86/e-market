@@ -4,7 +4,7 @@ import { updateCartUI } from './updateCartUI.js';
 import { initRegistration } from './auth.js';
 import { handleCartClick } from './cartActions.js';
 import { addToCart } from './productActions.js';
-import { toggleSections, updateCartCounter, renderProducts } from './uiManager.js';
+import { toggleSections, updateCartCounter, renderProducts, animateBuyButton } from './uiManager.js';
 import { processCheckout } from './checkout.js';
 
 let productsCount = getProductsCount();
@@ -50,6 +50,7 @@ const init = async () => {
         cart = addToCart(cart, e.target.dataset.id);
         productsCount++;
         saveAndRefresh();
+        animateBuyButton(e.target);
       }
     });
 
