@@ -1,28 +1,16 @@
 import { fetchProducts } from './api.js';
-import { getCart, getProductsCount, saveToStorage } from './storage.js';
+import {getCart, getProductsCount, getUser, saveToStorage} from './storage.js';
 import { updateCartUI } from './updateCartUI.js';
 import { initRegistration } from './auth.js';
 import { handleCartClick } from './cartActions.js';
 import { addToCart } from './productActions.js';
-import { toggleSections, updateCartCounter } from './uiManager.js';
+import { toggleSections, updateCartCounter, renderProducts } from './uiManager.js';
 import { processCheckout } from './checkout.js';
 
 let productsCount = getProductsCount();
 let cart = getCart();
 let productsMap = {};
 const container = document.querySelector('#catalog');
-
-const renderProducts = (products) => {
-  container.innerHTML = products.map((pr) => `
-    <article class="product-card">
-      ${pr.image ? `<img src="${pr.image}" alt="${pr.name}" onerror="this.style.display='none'">` : ''}
-      <div class="category">${pr.category}</div>
-      <h3>${pr.name}</h3>
-      <div class="price">${pr.price} €</div>
-      <button class="buy-btn" data-id="${pr.id}">Add to Cart</button>
-    </article>
-    `).join('');
-};
 
 const init = async () => {
   const saveAndRefresh = () => {
@@ -33,14 +21,14 @@ const init = async () => {
 
   try {
     const renderPage = async () => {
-      const user = localStorage.getItem('user');
+      const user = getUser();
       toggleSections(!!user);
 
       if (user) {
         const products = await fetchProducts();
         productsMap = products.reduce((acc, item) => (acc[item.id] = item, acc), {});
 
-        renderProducts(products);
+        renderProducts(products, container);
         saveAndRefresh();
       } else {
         updateCartCounter(productsCount);
