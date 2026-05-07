@@ -10,7 +10,9 @@ import { processCheckout } from './checkout.js';
 let productsCount = getProductsCount();
 let cart = getCart();
 let productsMap = {};
+let products = [];
 const container = document.querySelector('#catalog');
+const searchInput = document.querySelector('#product-search');
 
 const init = async () => {
   const saveAndRefresh = () => {
@@ -25,7 +27,7 @@ const init = async () => {
       toggleSections(!!user);
 
       if (user) {
-        const products = await fetchProducts();
+        products = await fetchProducts();
         productsMap = products.reduce((acc, item) => (acc[item.id] = item, acc), {});
 
         renderProducts(products, container);
@@ -64,6 +66,15 @@ const init = async () => {
       productsCount = result.productsCount;
       saveAndRefresh();
     });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function(event) {
+        console.log(event.target.value, productsMap);
+        const searchStr = event.target.value.toLowerCase().trim();
+        const findProducts = products.filter((el) => el.name.toLowerCase().includes(searchStr) || el.category.toLowerCase().includes(searchStr) );
+        renderProducts(findProducts, container);
+      });
+    }
 
   } catch (error) {
     container.innerHTML = `<p style="color:red; text-align:center;">Error loading products. Check console for details.</p>`;
