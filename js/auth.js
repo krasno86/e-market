@@ -10,7 +10,7 @@ export const initRegistration = (onSuccess) => {
         e.preventDefault();
         clearErrors();
         const formData = new FormData(form);
-        const email = formData.get('email');
+        const email = formData.get('email').trim();
         const pass = formData.get('pass');
         const confirmPass = formData.get('confirmPassword');
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,8 +19,9 @@ export const initRegistration = (onSuccess) => {
             return;
         }
 
-        if (pass.length < 6) {
-            document.getElementById('pass-error').textContent = 'Min 6 characters required';
+        const passRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+        if (!passRegex.test(pass)) {
+            document.getElementById('pass-error').textContent = 'Password must be at least 6 characters and include both letters and numbers';
             return;
         }
 
