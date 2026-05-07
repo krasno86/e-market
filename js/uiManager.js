@@ -41,3 +41,14 @@ export const animateBuyButton = (btn) => {
         btn.disabled = false;
     }, 2000);
 };
+
+export const setupSearch = (products, container) => {
+    const searchInput = document.querySelector('#product-search');
+    if (!searchInput) return;
+    searchInput.oninput = event => {
+        const searchStr = event.target.value.toLowerCase().trim();
+        const filtered = products.filter(el => el.name.toLowerCase().includes(searchStr) || el.category.toLowerCase().includes(searchStr));
+        if (filtered.length === 0) container.innerHTML = `<p class="no-results">Nothing found for "${event.target.value}"</p>`;
+        else renderProducts(filtered, container);
+    };
+};

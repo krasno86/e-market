@@ -4,7 +4,7 @@ import { updateCartUI } from './updateCartUI.js';
 import { initRegistration } from './auth.js';
 import { handleCartClick } from './cartActions.js';
 import { addToCart } from './productActions.js';
-import { toggleSections, updateCartCounter, renderProducts, animateBuyButton } from './uiManager.js';
+import { toggleSections, updateCartCounter, renderProducts, animateBuyButton, setupSearch } from './uiManager.js';
 import { processCheckout } from './checkout.js';
 
 let productsCount = getProductsCount();
@@ -14,8 +14,6 @@ let products = [];
 const container = document.querySelector('#catalog');
 
 const init = async () => {
-  const searchInput = document.querySelector('#product-search');
-
   const saveAndRefresh = () => {
     saveToStorage(cart, productsCount);
     updateCartUI(cart, productsMap);
@@ -31,6 +29,7 @@ const init = async () => {
         products = await fetchProducts();
         productsMap = products.reduce((acc, item) => (acc[item.id] = item, acc), {});
         renderProducts(products, container);
+        setupSearch(products, container);
         saveAndRefresh();
         document.querySelector('#shop-section').classList.add('loaded');
       } else {
@@ -68,18 +67,6 @@ const init = async () => {
       productsCount = result.productsCount;
       saveAndRefresh();
     });
-
-    if (searchInput) {
-      searchInput.addEventListener('input', function(event) {
-        const searchStr = event.target.value.toLowerCase().trim();
-        const findProducts = products.filter((el) => el.name.toLowerCase().includes(searchStr) || el.category.toLowerCase().includes(searchStr) );
-        if (findProducts.length === 0) {
-          container.innerHTML = `<p class="no-results">Nothing found for "${event.target.value}"</p>`;
-        } else {
-          renderProducts(findProducts, container);
-        }
-      });
-    }
 
   } catch (error) {
     container.innerHTML = `<p style="color:red; text-align:center;">Error loading products. Check console for details.</p>`;
