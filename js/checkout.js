@@ -1,4 +1,4 @@
-import { saveToStorage } from './storage.js';
+import { getUser } from './storage.js';
 
 export const processCheckout = (cart, productsCount) => {
     if (cart.length === 0) {
@@ -6,12 +6,10 @@ export const processCheckout = (cart, productsCount) => {
         return { cart, productsCount };
     }
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = getUser();
     const userEmail = user ? user.email : 'Customer';
     alert(`Thank you for your purchase, ${userEmail}! Total items: ${productsCount}`);
     const newCart = [];
     const newCount = 0;
-    saveToStorage(newCart, newCount);
-    window.location.reload();
     return { cart: newCart, productsCount: newCount };
 };
